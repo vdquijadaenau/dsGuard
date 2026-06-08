@@ -512,3 +512,66 @@ test('ordinary property access is not mistaken for a token reference', () => {
     fs.rmSync(tmp, { recursive: true, force: true });
   }
 });
+
+// ---------------------------------------------------------------------------
+// Performance (T042 / NFR-002) — the checker completes well under the
+// measurable bound from plan.md: < 5 seconds on a typical project
+// (50–500 component files). We exercise 200 .tsx files, comfortably inside
+// that band, and assert wall-clock completion under 5000 ms.
+// ---------------------------------------------------------------------------
+
+test('checker scans 200 .tsx files in under 5 seconds (NFR-002)', () => {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'dsguard-perf-'));
+  try {
+    // Generate a realistic mix: every third file carries the three seeded
+    // violations (so the rule engine does real work), the rest conform.
+    const violating = [
+      'import React from "react";',
+      'export function Drift({ label }: { label: string }) {',
+      '  return (',
+      '    <button style={{ color: "#FF0000", fontSize: "13px", borderRadius: "99px" }}>',
+      '      {label}',
+      '    </button>',
+      '  );',
+      '}',
+      '',
+    ].join('\n');
+    const conforming = [
+      'import React from "react";',
+      'import { colors, spacing, radius } from "./tokens";',
+      'export function Conform({ label }: { label: string }) {',
+      '  return (',
+      '    <button style={{ color: colors["brand-teal"], padding: spacing.md, borderRadius: radius.sm }}>',
+      '      {label}',
+      '    </button>',
+      '  );',
+      '}',
+      '',
+    ].join('\n');
+
+    const FILE_COUNT = 200;
+    let expectedErrors = 0;
+    for (let i = 0; i < FILE_COUNT; i += 1) {
+      const isViolating = i % 3 === 0;
+      if (isViolating) expectedErrors += 3;
+      fs.writeFileSync(
+        path.join(tmp, `Comp${i}.tsx`),
+        isViolating ? violating : conforming
+      );
+    }
+
+    const start = process.hrtime.bigint();
+    const report = checkPath(tmp, ACME_CONFIG);
+    const elapsedMs = Number(process.hrtime.bigint() - start) / 1e6;
+
+    // Sanity: the run actually did the work (zero false negatives at scale).
+    assert.equal(report.errorCount, expectedErrors, 'every seeded violation is caught at scale');
+
+    assert.ok(
+      elapsedMs < 5000,
+      `checker took ${elapsedMs.toFixed(0)}ms for ${FILE_COUNT} files; NFR-002 bound is 5000ms`
+    );
+  } finally {
+    fs.rmSync(tmp, { recursive: true, force: true });
+  }
+});

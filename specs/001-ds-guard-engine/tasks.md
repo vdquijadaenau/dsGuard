@@ -234,9 +234,9 @@ false` on same file → `warn` severity.
 
 **Purpose**: Multi-system routing, documentation, and end-to-end validation.
 
-- [ ] T040 Write `ds-guard/README.md` — engine plugin usage (install, init, generate, check, review), key limits (static analysis only, freeformRules advisory)
-- [ ] T041 Run `quickstart.md` validation scenarios end-to-end (Scenarios 1–7) and confirm all pass
-- [ ] T042 [P] Add performance test to `tests/unit/checker.test.mjs` — generate a fixture of 200 `.tsx` files, run checker, assert wall-clock completion under 5 seconds (NFR-002); documents the measurable performance bound from plan.md
+- [X] T040 Write `ds-guard/README.md` — engine plugin usage (install, init, generate, check, review), key limits (static analysis only, freeformRules advisory)
+- [X] T041 Run `quickstart.md` validation scenarios end-to-end (Scenarios 1–7) and confirm all pass
+- [X] T042 [P] Add performance test to `tests/unit/checker.test.mjs` — generate a fixture of 200 `.tsx` files, run checker, assert wall-clock completion under 5 seconds (NFR-002); documents the measurable performance bound from plan.md
 
 ---
 

@@ -83,6 +83,19 @@ function resolveAlias(value, map, depth = 0) {
 }
 
 /**
+ * True when a value is still an unresolved `{dotted.alias}` reference — i.e. it
+ * points at a token name that does not exist in the definition. Such a value is
+ * not a real approved literal and must never be emitted into a permitted set
+ * (otherwise the checker would treat the placeholder string as an allowed value).
+ *
+ * @param {string|number} value
+ * @returns {boolean}
+ */
+function isUnresolvedAlias(value) {
+  return typeof value === "string" && /^\{.+\}$/.test(value.trim());
+}
+
+/**
  * Top group name (first dotted segment) of a token path.
  * @param {string} name
  * @returns {string}
@@ -110,7 +123,10 @@ function resolveAllowed(names, map) {
   for (const name of names) {
     out.push(name);
     const ref = map.get(name);
-    if (ref) out.push(String(resolveAlias(ref.value, map)));
+    if (ref) {
+      const resolved = String(resolveAlias(ref.value, map));
+      if (!isUnresolvedAlias(resolved)) out.push(resolved);
+    }
   }
   return uniqSorted(out);
 }
@@ -129,11 +145,14 @@ export function resolvePermittedSets(rules, tokenMap) {
   const spacing = [];
 
   for (const [name, info] of tokenMap) {
+    const resolved = String(resolveAlias(info.value, tokenMap));
+    // An alias pointing at a missing primitive stays a `{…}` placeholder; it is
+    // not an approved value, so drop it rather than leak it into a permitted set.
+    if (isUnresolvedAlias(resolved)) continue;
     if (info.type === "color") {
-      colors.push(String(resolveAlias(info.value, tokenMap)));
+      colors.push(resolved);
     } else if (info.type === "dimension") {
       const group = topGroup(name).toLowerCase();
-      const resolved = String(resolveAlias(info.value, tokenMap));
       if (/^(font|type|text)/.test(group)) typeScale.push(resolved);
       else if (/^spac/.test(group)) spacing.push(resolved);
     }

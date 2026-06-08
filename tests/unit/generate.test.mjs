@@ -61,6 +61,49 @@ test("generation from known-good fixture produces correct checker-config fields"
   }
 });
 
+test("unresolved {alias} tokens never leak into approved sets", () => {
+  // Reproduces the init-stub case: a semantic alias points at a primitive the
+  // maintainer has since removed/replaced, so it stays a `{…}` placeholder. It
+  // must be dropped, not emitted as an approved literal value.
+  const work = tmp();
+  try {
+    const def = join(work, "definition");
+    mkdirSync(join(def, "tokens"), { recursive: true });
+    writeFileSync(
+      join(def, "rules.json"),
+      JSON.stringify({ name: "myds", schemaVersion: "1.0.0" })
+    );
+    writeFileSync(
+      join(def, "tokens", "primitives.json"),
+      JSON.stringify({
+        color: { brand: { teal: { $type: "color", $value: "#00897B" } } },
+      })
+    );
+    // The alias target `color.brand.example` does not exist → unresolvable.
+    writeFileSync(
+      join(def, "tokens", "semantic.json"),
+      JSON.stringify({
+        color: { text: { primary: { $type: "color", $value: "{color.brand.example}" } } },
+      })
+    );
+
+    const outDir = join(work, "out");
+    generatePlugin({ definitionDir: def, outDir });
+    const cfg = readConfig(outDir);
+
+    assert.deepEqual(cfg.approvedColors, ["#00897B"], "only the resolved colour is approved");
+    assert.ok(
+      !cfg.approvedColors.some((c) => /^\{.+\}$/.test(c)),
+      "no {alias} placeholder may appear in approvedColors"
+    );
+    // And it must not surface in the skill vocabulary either.
+    const skill = readFileSync(join(outDir, "skills", "myds-design-system.md"), "utf8");
+    assert.ok(!skill.includes("{color.brand.example}"), "placeholder absent from skill");
+  } finally {
+    rmSync(work, { recursive: true, force: true });
+  }
+});
+
 test("guidance skill contains the same approved vocabulary", () => {
   const work = tmp();
   try {
