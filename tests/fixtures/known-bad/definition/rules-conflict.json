@@ -1,0 +1,11 @@
+{
+  "name": "acme",
+  "schemaVersion": "1.0.0",
+  "shadows": {
+    "policy": "none",
+    "allowed": ["shadow.md"]
+  },
+  "radius": {
+    "allowed": ["radius.sm", "radius.md"]
+  }
+}

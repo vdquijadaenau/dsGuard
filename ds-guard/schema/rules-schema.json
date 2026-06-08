@@ -1,0 +1,172 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ds-guard/schema/rules-schema.json",
+  "title": "DS-Guard RulesDocument",
+  "description": "Enforceable policy for one design system (design/rules.json). All fields except 'name' and 'schemaVersion' are optional; the checker skips a rule class when its field is absent.",
+  "type": "object",
+  "required": ["name", "schemaVersion"],
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "System identifier, e.g. \"acme\" — used in generated artifact names.",
+      "minLength": 1,
+      "pattern": "^[a-z][a-z0-9-]*$"
+    },
+    "schemaVersion": {
+      "type": "string",
+      "description": "Semantic version of the rules schema, e.g. \"1.0.0\".",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "tokenSetComplete": {
+      "type": "boolean",
+      "description": "true → undefined-but-plausible values are hard failures (FR-012). Defaults to false."
+    },
+    "casing": {
+      "type": "string",
+      "enum": ["sentence", "title", "uppercase", "none"],
+      "description": "Required casing convention for UI text."
+    },
+    "textAlign": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "banned": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Banned text-align values, e.g. [\"justify\"]."
+        },
+        "centerOnlyShort": {
+          "type": "boolean",
+          "description": "Center text only in short (< 3 words) contexts."
+        }
+      }
+    },
+    "type": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "scaleOnly": {
+          "type": "boolean",
+          "description": "Only type-scale tokens permitted; raw px forbidden."
+        },
+        "bodyMinPx": {
+          "type": "number",
+          "description": "Minimum body text size in px.",
+          "exclusiveMinimum": 0
+        }
+      }
+    },
+    "shadows": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["policy"],
+      "properties": {
+        "policy": {
+          "type": "string",
+          "enum": ["allowlist", "none"],
+          "description": "\"none\" = no shadows permitted; \"allowlist\" = only 'allowed' permitted."
+        },
+        "allowed": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Token names; only relevant when policy = \"allowlist\"."
+        }
+      }
+    },
+    "radius": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["allowed"],
+      "properties": {
+        "allowed": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Token names of permitted border radii."
+        }
+      }
+    },
+    "fonts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ui"],
+      "properties": {
+        "ui": {
+          "type": "string",
+          "description": "Font role for UI text."
+        },
+        "editorial": {
+          "type": "string",
+          "description": "Font role for editorial/marketing text."
+        },
+        "editorialContexts": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Prose descriptions of valid editorial contexts."
+        }
+      }
+    },
+    "elevation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["allowed"],
+      "properties": {
+        "allowed": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Token names of permitted elevation values."
+        }
+      }
+    },
+    "motion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["allowed"],
+      "properties": {
+        "allowed": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Token names of permitted animation/transition values."
+        }
+      }
+    },
+    "arbitraryAllowlist": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Values explicitly permitted despite not matching any token (e.g. \"max-w-[72ch]\")."
+    },
+    "freeformRules": {
+      "type": "string",
+      "description": "Markdown guidance conveyed to the agent; not checker-enforced (Constitution Principle V escape hatch)."
+    }
+  },
+  "allOf": [
+    {
+      "$comment": "Conflict validation: shadows.policy 'none' MUST NOT carry a non-empty shadows.allowed list.",
+      "if": {
+        "properties": {
+          "shadows": {
+            "type": "object",
+            "properties": {
+              "policy": { "const": "none" }
+            },
+            "required": ["policy"]
+          }
+        },
+        "required": ["shadows"]
+      },
+      "then": {
+        "properties": {
+          "shadows": {
+            "properties": {
+              "allowed": {
+                "type": "array",
+                "maxItems": 0
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

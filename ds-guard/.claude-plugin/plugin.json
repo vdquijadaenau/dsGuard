@@ -1,0 +1,29 @@
+{
+  "name": "ds-guard",
+  "version": "0.1.0",
+  "description": "Design System Enforcement Engine — generates a system-specific guidance skill and a config-driven static checker from a design-system definition (DTCG tokens + rules.json).",
+  "author": "DS-Guard",
+  "license": "MIT",
+  "commands": [
+    {
+      "name": "init",
+      "description": "Scaffold an empty design-system definition directory (design/).",
+      "path": "commands/init.md"
+    },
+    {
+      "name": "generate",
+      "description": "Generate a self-contained per-system plugin from a valid definition.",
+      "path": "commands/generate.md"
+    },
+    {
+      "name": "check",
+      "description": "Run the static checker against source files and report design-system violations.",
+      "path": "commands/check.md"
+    },
+    {
+      "name": "review",
+      "description": "Request an independent, fresh-context qualitative review of a built component.",
+      "path": "commands/review.md"
+    }
+  ]
+}

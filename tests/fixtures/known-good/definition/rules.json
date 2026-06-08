@@ -1,0 +1,34 @@
+{
+  "name": "acme",
+  "schemaVersion": "1.0.0",
+  "tokenSetComplete": true,
+  "casing": "sentence",
+  "textAlign": {
+    "banned": ["justify"],
+    "centerOnlyShort": true
+  },
+  "type": {
+    "scaleOnly": true,
+    "bodyMinPx": 14
+  },
+  "shadows": {
+    "policy": "allowlist",
+    "allowed": ["shadow.sm", "shadow.md"]
+  },
+  "radius": {
+    "allowed": ["radius.sm", "radius.md", "radius.lg"]
+  },
+  "fonts": {
+    "ui": "font.sans",
+    "editorial": "font.serif",
+    "editorialContexts": ["marketing hero", "blog body"]
+  },
+  "elevation": {
+    "allowed": ["elevation.1", "elevation.2"]
+  },
+  "motion": {
+    "allowed": ["motion.fast", "motion.base"]
+  },
+  "arbitraryAllowlist": ["max-w-[72ch]"],
+  "freeformRules": "## House rules\n\n- Prefer **sentence case** for all UI copy.\n- Never use `justify` text alignment in body content.\n- Reserve serif editorial fonts for marketing and blog contexts only."
+}

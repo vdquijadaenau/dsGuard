@@ -1,0 +1,30 @@
+{
+  "$description": "Primitive (raw) design tokens for acme. Sample values used across US2/US3 tests.",
+  "color": {
+    "$type": "color",
+    "brand": {
+      "teal": { "$value": "#0A7E8C" },
+      "ink": { "$value": "#0B1F2A" }
+    },
+    "neutral": {
+      "white": { "$value": "#FFFFFF" }
+    }
+  },
+  "spacing": {
+    "$type": "dimension",
+    "xs": { "$value": "4px" },
+    "sm": { "$value": "8px" },
+    "md": { "$value": "16px" }
+  },
+  "fontSize": {
+    "$type": "dimension",
+    "body": { "$value": "16px" },
+    "heading": { "$value": "24px" }
+  },
+  "radius": {
+    "$type": "dimension",
+    "sm": { "$value": "4px" },
+    "md": { "$value": "8px" },
+    "lg": { "$value": "16px" }
+  }
+}

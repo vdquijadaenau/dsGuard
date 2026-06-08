@@ -1,0 +1,16 @@
+{
+  "name": "ds-guard-engine",
+  "version": "0.1.0",
+  "description": "DS-Guard — Design System Enforcement Engine (build-time plugin + generated per-system plugins)",
+  "type": "module",
+  "private": true,
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "node --test \"tests/unit/**/*.test.mjs\""
+  },
+  "dependencies": {
+    "ajv": "^8.17.1"
+  }
+}

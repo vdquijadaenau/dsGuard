@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "1.0.0",
+  "systems": [
+    {
+      "name": "system-a",
+      "pluginDir": "plugins/system-a",
+      "patterns": [
+        "packages/app-a/**",
+        "packages/shared/**"
+      ]
+    },
+    {
+      "name": "system-b",
+      "pluginDir": "plugins/system-b",
+      "patterns": [
+        "packages/app-b/**"
+      ]
+    }
+  ]
+}

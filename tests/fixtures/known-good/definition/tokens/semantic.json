@@ -1,0 +1,13 @@
+{
+  "$description": "Semantic (alias) tokens for acme. Aliases reference primitives.",
+  "color": {
+    "$type": "color",
+    "text": {
+      "primary": { "$value": "{color.brand.ink}" },
+      "onBrand": { "$value": "{color.neutral.white}" }
+    },
+    "surface": {
+      "brand": { "$value": "{color.brand.teal}" }
+    }
+  }
+}

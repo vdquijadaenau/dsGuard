@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment
+.env
+.env.*
+
+# Coverage / test output
+coverage/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/
+
+# Project-specific (carried over from prior .gitgnore)
+.claude/skills
+.specify
+specs/
+CLAUDE.md
+PRD-ds-guard-speckit.md
+ds-guard-bundle.zip
+README23.md

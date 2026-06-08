@@ -1,0 +1,59 @@
+---
+name: {{SYSTEM_NAME}}-ui-gate
+event: ui-edit-complete
+blocking: true
+---
+
+<!--
+  GENERATED — DS-Guard workflow gate hook.
+  System:         {{SYSTEM_NAME}}
+  Schema version: {{SCHEMA_VERSION}}
+  Generated at:   {{GENERATED_AT}}
+
+  Do not edit by hand; re-run /dsguard:generate after changing the definition.
+-->
+
+# {{SYSTEM_NAME}} Design System — UI Gate Hook
+
+Automatic, deterministic gate that runs whenever the agent finishes editing UI
+source, so design-system drift can never reach "done" unnoticed.
+
+## Trigger
+
+Fires on **UI-edit completion** — after the agent has finished creating or
+modifying any UI source file:
+
+- `.tsx`, `.ts`, `.jsx`, `.js` (components, styled-components, CSS-in-JS)
+- `.css`, `.scss`, `.module.css` (stylesheets)
+
+In a Claude Code host this corresponds to a `Stop` / post-edit checkpoint scoped
+to the edited UI paths. Files that are not UI source do not trigger the gate.
+
+## Action
+
+Run the deterministic checker over the edited path:
+
+```
+/dsguard:check <edited-path> --system {{SYSTEM_NAME}}
+```
+
+which invokes the frozen, self-contained checker shipped with this plugin:
+
+```bash
+node ${CLAUDE_PLUGIN_ROOT}/scripts/checker.mjs <edited-path> \
+  --config ${CLAUDE_PLUGIN_ROOT}/checker-config.json
+```
+
+## Blocking rule
+
+The checker's exit code is authoritative:
+
+| Exit code | Result | Gate behaviour |
+|-----------|--------|----------------|
+| 0 | PASS — zero hard errors | Allow the workflow to complete |
+| 1 | FAIL — one or more hard errors | **Block "done"** — surface each finding and require the violations be fixed |
+| 2 | Configuration / I/O error | Surface the error; do not silently pass |
+
+On exit code 1 the gate is **blocking**: the agent must not report the UI work as
+complete until the checker passes (exit code 0). Re-run the check after fixing the
+reported violations.

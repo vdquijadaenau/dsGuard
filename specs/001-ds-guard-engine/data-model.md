@@ -117,6 +117,9 @@ CheckerConfig {
   generatedAt: string            // ISO-8601 timestamp
   tokenSetComplete: boolean      // Copied from rules.json; defaults to false
 
+  approvedTokenNames: string[]   // Every defined token's dotted name (e.g. "color.brand.teal");
+                                 // used by the checker to detect plausible-but-undefined token
+                                 // references in authoritative mode (FR-012)
   approvedColors: string[]       // Resolved from token files (all $type: "color" values)
   approvedTypeScale: string[]    // Resolved from token files (all $type: "dimension" font sizes)
   approvedSpacing: string[]      // Resolved from token files (all $type: "dimension" spacing)

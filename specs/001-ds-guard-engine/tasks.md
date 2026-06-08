@@ -33,10 +33,10 @@ negatives / near-zero false positives) and are derived directly from spec accept
 
 **Purpose**: Create the engine plugin directory structure and shared configuration.
 
-- [ ] T001 Create `ds-guard/` engine plugin directory structure: `.claude-plugin/`, `commands/`, `scripts/`, `templates/`, `schema/`
-- [ ] T002 Create `ds-guard/.claude-plugin/plugin.json` — engine plugin manifest with name `ds-guard`, version `0.1.0`, and command declarations for `init`, `generate`, `check`, `review`
-- [ ] T003 [P] Create `ds-guard/schema/rules-schema.json` — JSON Schema (draft-07) for `rules.json` with required fields `name` and `schemaVersion`, all optional rule-class fields, and conflict validation
-- [ ] T004 [P] Create `tests/fixtures/` directory with subdirectories `known-bad/components/`, `known-bad/definition/`, `known-good/components/`, `known-good/definition/`
+- [X] T001 Create `ds-guard/` engine plugin directory structure: `.claude-plugin/`, `commands/`, `scripts/`, `templates/`, `schema/`
+- [X] T002 Create `ds-guard/.claude-plugin/plugin.json` — engine plugin manifest with name `ds-guard`, version `0.1.0`, and command declarations for `init`, `generate`, `check`, `review`
+- [X] T003 [P] Create `ds-guard/schema/rules-schema.json` — JSON Schema (draft-07) for `rules.json` with required fields `name` and `schemaVersion`, all optional rule-class fields, and conflict validation
+- [X] T004 [P] Create `tests/fixtures/` directory with subdirectories `known-bad/components/`, `known-bad/definition/`, `known-good/components/`, `known-good/definition/`
 
 ---
 
@@ -46,11 +46,11 @@ negatives / near-zero false positives) and are derived directly from spec accept
 
 **⚠️ CRITICAL**: No user story work begins until this phase is complete.
 
-- [ ] T005 Implement `ds-guard/scripts/validate-definition.mjs` — load and validate `design/rules.json` against `ds-guard/schema/rules-schema.json` using `ajv`; detect conflicting rules (e.g. `shadows.policy: "none"` + non-empty `shadows.allowed`); return array of error strings; empty array = valid
-- [ ] T006 [P] Create stub template files in `ds-guard/templates/`: `guidance-skill.md.tmpl`, `checker-config.json.tmpl`, `gate-hook.md.tmpl`, `plugin-manifest.json.tmpl` — each with placeholder tokens `{{SYSTEM_NAME}}`, `{{SCHEMA_VERSION}}`, `{{GENERATED_AT}}`
-- [ ] T007 [P] Implement `ds-guard/scripts/checker.mjs` skeleton — config loading from `checker-config.json`, file discovery for `.tsx`/`.ts`/`.js`/`.css` source files, per-file scan loop, rule-dispatch structure, `CheckResult` and `CheckReport` output shape — no rule implementations yet
-- [ ] T038 [P] Implement multi-system routing in `ds-guard/scripts/checker.mjs` — parse `ds-guard.config.json` at project root if present; route each source file to matching system's `checker-config.json` via path-glob first-match; skip files matching no pattern without error (FR-001b — MUST requirement; promoted from Polish)
-- [ ] T039 [P] Create routing manifest fixture `tests/fixtures/ds-guard.config.json` and add routing tests to `tests/unit/checker.test.mjs` — file matching system-A pattern uses system-A config; file matching no pattern is skipped; first-match semantics verified (depends on T038)
+- [X] T005 Implement `ds-guard/scripts/validate-definition.mjs` — load and validate `design/rules.json` against `ds-guard/schema/rules-schema.json` using `ajv`; detect conflicting rules (e.g. `shadows.policy: "none"` + non-empty `shadows.allowed`); return array of error strings; empty array = valid
+- [X] T006 [P] Create stub template files in `ds-guard/templates/`: `guidance-skill.md.tmpl`, `checker-config.json.tmpl`, `gate-hook.md.tmpl`, `plugin-manifest.json.tmpl` — each with placeholder tokens `{{SYSTEM_NAME}}`, `{{SCHEMA_VERSION}}`, `{{GENERATED_AT}}`
+- [X] T007 [P] Implement `ds-guard/scripts/checker.mjs` skeleton — config loading from `checker-config.json`, file discovery for `.tsx`/`.ts`/`.js`/`.css` source files, per-file scan loop, rule-dispatch structure, `CheckResult` and `CheckReport` output shape — no rule implementations yet
+- [X] T038 [P] Implement multi-system routing in `ds-guard/scripts/checker.mjs` — parse `ds-guard.config.json` at project root if present; route each source file to matching system's `checker-config.json` via path-glob first-match; skip files matching no pattern without error (FR-001b — MUST requirement; promoted from Polish)
+- [X] T039 [P] Create routing manifest fixture `tests/fixtures/ds-guard.config.json` and add routing tests to `tests/unit/checker.test.mjs` — file matching system-A pattern uses system-A config; file matching no pattern is skipped; first-match semantics verified (depends on T038)
 
 **Checkpoint**: Foundation complete — user story phases can begin.
 
@@ -68,15 +68,15 @@ correct stubs; fill definition with sample tokens and rules; run validation → 
 
 > **Write these tests first; confirm they fail before implementing T008–T009**
 
-- [ ] T008 [P] [US1] Create `tests/fixtures/known-good/definition/rules.json` — valid `rules.json` with all optional fields, passes `rules-schema.json` (used as positive fixture in T012)
-- [ ] T009 [P] [US1] Create `tests/fixtures/known-bad/definition/rules-missing-name.json` — `rules.json` with missing required `name` field (used as negative fixture in T012)
-- [ ] T010 [P] [US1] Create `tests/fixtures/known-bad/definition/rules-conflict.json` — `rules.json` with `shadows.policy: "none"` + `shadows.allowed` non-empty (conflict fixture for T012)
+- [X] T008 [P] [US1] Create `tests/fixtures/known-good/definition/rules.json` — valid `rules.json` with all optional fields, passes `rules-schema.json` (used as positive fixture in T012)
+- [X] T009 [P] [US1] Create `tests/fixtures/known-bad/definition/rules-missing-name.json` — `rules.json` with missing required `name` field (used as negative fixture in T012)
+- [X] T010 [P] [US1] Create `tests/fixtures/known-bad/definition/rules-conflict.json` — `rules.json` with `shadows.policy: "none"` + `shadows.allowed` non-empty (conflict fixture for T012)
 
 ### Implementation for User Story 1
 
-- [ ] T011 [US1] Implement `ds-guard/scripts/init.mjs` — scaffold `design/tokens/primitives.json` (DTCG stub), `design/tokens/semantic.json` (DTCG stub), `design/rules.json` (stub with `name` and `schemaVersion`), `design/references/` (empty dir); error if `design/` already exists (no `--force`)
-- [ ] T012 [US1] Implement `ds-guard/commands/init.md` — `/dsguard:init <name>` command per `contracts/command-init.md`; wires to `init.mjs`; success and failure outputs as specified
-- [ ] T013 [US1] Write unit tests `tests/unit/validate-definition.test.mjs` — valid fixture → empty errors; missing-name fixture → error listing `name`; conflict fixture → error listing conflict; uses `node:test`
+- [X] T011 [US1] Implement `ds-guard/scripts/init.mjs` — scaffold `design/tokens/primitives.json` (DTCG stub), `design/tokens/semantic.json` (DTCG stub), `design/rules.json` (stub with `name` and `schemaVersion`), `design/references/` (empty dir); error if `design/` already exists (no `--force`)
+- [X] T012 [US1] Implement `ds-guard/commands/init.md` — `/dsguard:init <name>` command per `contracts/command-init.md`; wires to `init.mjs`; success and failure outputs as specified
+- [X] T013 [US1] Write unit tests `tests/unit/validate-definition.test.mjs` — valid fixture → empty errors; missing-name fixture → error listing `name`; conflict fixture → error listing conflict; uses `node:test`
 
 **Checkpoint**: US1 independently testable — maintainer can scaffold and validate a definition.
 
@@ -95,17 +95,17 @@ contains same vocabulary; run generation twice → byte-identical output (exclud
 
 > **Write these tests first; confirm they fail before implementing T015–T019**
 
-- [ ] T014 [P] [US2] Create `tests/fixtures/known-good/definition/tokens/primitives.json` — DTCG file with sample colour, dimension (spacing, type), and radius tokens for use across US2/US3 tests
-- [ ] T015 [P] [US2] Create `tests/fixtures/known-good/definition/tokens/semantic.json` — DTCG file with semantic aliases referencing primitives
+- [X] T014 [P] [US2] Create `tests/fixtures/known-good/definition/tokens/primitives.json` — DTCG file with sample colour, dimension (spacing, type), and radius tokens for use across US2/US3 tests
+- [X] T015 [P] [US2] Create `tests/fixtures/known-good/definition/tokens/semantic.json` — DTCG file with semantic aliases referencing primitives
 
 ### Implementation for User Story 2
 
-- [ ] T016 [P] [US2] Complete `ds-guard/templates/checker-config.json.tmpl` — all `CheckerConfig` fields with `{{APPROVED_COLORS}}`, `{{APPROVED_TYPE_SCALE}}`, `{{APPROVED_SPACING}}`, `{{APPROVED_RADIUS}}`, `{{APPROVED_SHADOWS}}`, `{{TOKEN_SET_COMPLETE}}`, `{{FREEFORM_RULES}}` and remaining field placeholders
-- [ ] T017 [P] [US2] Complete `ds-guard/templates/guidance-skill.md.tmpl` — add Claude Code skill YAML frontmatter with `trigger.keywords: {{TRIGGER_KEYWORDS}}` and `trigger.summary: {{TRIGGER_SUMMARY}}` fields; body section with approved vocabulary, enforceable rules, `{{FREEFORM_RULES}}`, and on-demand refs; template MUST be fully complete before T019 runs
-- [ ] T018 [P] [US2] Complete `ds-guard/templates/plugin-manifest.json.tmpl` — per-system plugin manifest with `{{SYSTEM_NAME}}`, `{{VERSION}}`, command and skill declarations
-- [ ] T019 [US2] Implement `ds-guard/scripts/generate.mjs` — load and validate definition via `validate-definition.mjs`; resolve permitted sets from DTCG token files; fill all templates; write per-system plugin to output dir; copy `scripts/checker.mjs` as frozen copy; all-or-nothing (no partial output on error) (depends on T005, T007, T016–T018)
-- [ ] T020 [US2] Implement `ds-guard/commands/generate.md` — `/dsguard:generate [--out <dir>]` command per `contracts/command-generate.md`; wires to `generate.mjs`; success and failure outputs as specified
-- [ ] T021 [US2] Write unit tests `tests/unit/generate.test.mjs` — generation from known-good fixture produces correct `checker-config.json` fields; idempotency (run twice → byte-identical except `generatedAt`); invalid definition → hard error, no output files created
+- [X] T016 [P] [US2] Complete `ds-guard/templates/checker-config.json.tmpl` — all `CheckerConfig` fields with `{{APPROVED_COLORS}}`, `{{APPROVED_TYPE_SCALE}}`, `{{APPROVED_SPACING}}`, `{{APPROVED_RADIUS}}`, `{{APPROVED_SHADOWS}}`, `{{TOKEN_SET_COMPLETE}}`, `{{FREEFORM_RULES}}` and remaining field placeholders
+- [X] T017 [P] [US2] Complete `ds-guard/templates/guidance-skill.md.tmpl` — add Claude Code skill YAML frontmatter with `trigger.keywords: {{TRIGGER_KEYWORDS}}` and `trigger.summary: {{TRIGGER_SUMMARY}}` fields; body section with approved vocabulary, enforceable rules, `{{FREEFORM_RULES}}`, and on-demand refs; template MUST be fully complete before T019 runs
+- [X] T018 [P] [US2] Complete `ds-guard/templates/plugin-manifest.json.tmpl` — per-system plugin manifest with `{{SYSTEM_NAME}}`, `{{VERSION}}`, command and skill declarations
+- [X] T019 [US2] Implement `ds-guard/scripts/generate.mjs` — load and validate definition via `validate-definition.mjs`; resolve permitted sets from DTCG token files; fill all templates; write per-system plugin to output dir; copy `scripts/checker.mjs` as frozen copy; all-or-nothing (no partial output on error) (depends on T005, T007, T016–T018)
+- [X] T020 [US2] Implement `ds-guard/commands/generate.md` — `/dsguard:generate [--out <dir>]` command per `contracts/command-generate.md`; wires to `generate.mjs`; success and failure outputs as specified
+- [X] T021 [US2] Write unit tests `tests/unit/generate.test.mjs` — generation from known-good fixture produces correct `checker-config.json` fields; idempotency (run twice → byte-identical except `generatedAt`); invalid definition → hard error, no output files created
 
 **Checkpoint**: US2 independently testable — maintainer can generate a complete per-system plugin.
 
@@ -124,14 +124,14 @@ violations (file, line, rule class, value); `tests/fixtures/known-good/component
 
 > **Write these tests first; confirm they fail before implementing T024–T026**
 
-- [ ] T022 [P] [US3] Create `tests/fixtures/known-bad/components/BadButton.tsx` — raw colour (`#FF0000`), off-scale size (`font-size: 13px`), disallowed radius (`borderRadius: '99px'`); maps to US3 acceptance scenario 1
-- [ ] T023 [P] [US3] Create `tests/fixtures/known-good/components/GoodButton.tsx` — token references only (`colors['brand-teal']`, `spacing.sm`), conforming radius; no false-alarm patterns; maps to US3 acceptance scenario 2
+- [X] T022 [P] [US3] Create `tests/fixtures/known-bad/components/BadButton.tsx` — raw colour (`#FF0000`), off-scale size (`font-size: 13px`), disallowed radius (`borderRadius: '99px'`); maps to US3 acceptance scenario 1
+- [X] T023 [P] [US3] Create `tests/fixtures/known-good/components/GoodButton.tsx` — token references only (`colors['brand-teal']`, `spacing.sm`), conforming radius; no false-alarm patterns; maps to US3 acceptance scenario 2
 
 ### Implementation for User Story 3
 
-- [ ] T024 [US3] Complete `ds-guard/scripts/checker.mjs` — implement all rule-class checks: colour (raw hex/rgb vs `approvedColors`), type scale (raw px vs `approvedTypeScale`), spacing, radius, shadow, casing, text-align; `tokenSetComplete` mode; `arbitraryAllowlist` bypass; text and JSON output formats; exit codes 0/1/2 per contract (depends on T007)
-- [ ] T025 [US3] Implement `ds-guard/commands/check.md` — `/dsguard:check <path> [--system <name>] [--format json|text]` per `contracts/command-check.md`; wires to `checker.mjs`
-- [ ] T026 [US3] Write unit tests `tests/unit/checker.test.mjs` — zero false negatives on `known-bad` fixtures; zero false positives on `known-good` fixtures; both output formats verified; exit code 1 on FAIL, 0 on PASS, 2 on config error (depends on T022, T023)
+- [X] T024 [US3] Complete `ds-guard/scripts/checker.mjs` — implement all rule-class checks: colour (raw hex/rgb vs `approvedColors`), type scale (raw px vs `approvedTypeScale`), spacing, radius, shadow, casing, text-align; `tokenSetComplete` mode; `arbitraryAllowlist` bypass; text and JSON output formats; exit codes 0/1/2 per contract (depends on T007)
+- [X] T025 [US3] Implement `ds-guard/commands/check.md` — `/dsguard:check <path> [--system <name>] [--format json|text]` per `contracts/command-check.md`; wires to `checker.mjs`
+- [X] T026 [US3] Write unit tests `tests/unit/checker.test.mjs` — zero false negatives on `known-bad` fixtures; zero false positives on `known-good` fixtures; both output formats verified; exit code 1 on FAIL, 0 on PASS, 2 on config error (depends on T022, T023)
 
 **Checkpoint**: US3 independently testable — checker detects all violations in known-bad, passes on known-good.
 
@@ -146,9 +146,9 @@ context cost at rest.
 with keywords derived from definition token names and rule classes; verify full body present
 as separate section.
 
-- [ ] T027 [US4] Add read-only safety test to `tests/unit/checker.test.mjs` — verify that running the checker against any fixture never creates, modifies, or deletes any file in the target path (NFR-005: safety of adoption); assert no file-system writes occur during a check run
-- [ ] T028 [US4] Update `ds-guard/scripts/generate.mjs` — extract trigger keywords from definition: token names from DTCG files + rule-class keywords from `rules.json`; populate `{{TRIGGER_KEYWORDS}}` and `{{TRIGGER_SUMMARY}}` in skill template (depends on T019)
-- [ ] T029 [US4] Add trigger-structure tests to `tests/unit/generate.test.mjs` — generated skill has trigger summary section; keywords list is non-empty and derived from definition; body section present and contains approved vocabulary
+- [X] T027 [US4] Add read-only safety test to `tests/unit/checker.test.mjs` — verify that running the checker against any fixture never creates, modifies, or deletes any file in the target path (NFR-005: safety of adoption); assert no file-system writes occur during a check run
+- [X] T028 [US4] Update `ds-guard/scripts/generate.mjs` — extract trigger keywords from definition: token names from DTCG files + rule-class keywords from `rules.json`; populate `{{TRIGGER_KEYWORDS}}` and `{{TRIGGER_SUMMARY}}` in skill template (depends on T019)
+- [X] T029 [US4] Add trigger-structure tests to `tests/unit/generate.test.mjs` — generated skill has trigger summary section; keywords list is non-empty and derived from definition; body section present and contains approved vocabulary
 
 **Checkpoint**: US4 independently testable — generated skill has correct trigger structure.
 
@@ -163,7 +163,7 @@ edits required; checker can't contradict the definition.
 `checker-config.json` → new colour present, old-only colours absent; diff guidance skill →
 new vocabulary present.
 
-- [ ] T030 [US5] Add regeneration tests to `tests/unit/generate.test.mjs` — modify known-good definition fixture (add token, change rule), regenerate, assert both artifacts reflect change; assert old value absent; assert no manual edits needed (depends on T021)
+- [X] T030 [US5] Add regeneration tests to `tests/unit/generate.test.mjs` — modify known-good definition fixture (add token, change rule), regenerate, assert both artifacts reflect change; assert old value absent; assert no manual edits needed (depends on T021)
 
 **Checkpoint**: US5 independently testable — regeneration tracks definition with zero drift.
 
@@ -176,9 +176,9 @@ new vocabulary present.
 **Independent Test**: Inspect generated `hooks/ui-gate.md` — verify it specifies trigger on
 UI-edit completion, invokes `/dsguard:check`, and blocks on FAIL (exit code 1).
 
-- [ ] T031 [US6] Complete `ds-guard/templates/gate-hook.md.tmpl` — Claude Code workflow hook that triggers on UI-edit completion event, runs `/dsguard:check <edited-path>`, blocks on exit code 1 (FAIL)
-- [ ] T032 [US6] Update `ds-guard/scripts/generate.mjs` — ensure gate hook is written to `<out>/hooks/ui-gate.md` during generation (depends on T019, T031)
-- [ ] T033 [US6] Add gate-hook tests to `tests/unit/generate.test.mjs` — generated plugin contains `hooks/ui-gate.md`; hook references checker command; hook trigger condition is UI-edit event
+- [X] T031 [US6] Complete `ds-guard/templates/gate-hook.md.tmpl` — Claude Code workflow hook that triggers on UI-edit completion event, runs `/dsguard:check <edited-path>`, blocks on exit code 1 (FAIL)
+- [X] T032 [US6] Update `ds-guard/scripts/generate.mjs` — ensure gate hook is written to `<out>/hooks/ui-gate.md` during generation (depends on T019, T031)
+- [X] T033 [US6] Add gate-hook tests to `tests/unit/generate.test.mjs` — generated plugin contains `hooks/ui-gate.md`; hook references checker command; hook trigger condition is UI-edit event
 
 **Checkpoint**: US6 independently testable — generated plugin contains a functional gate hook.
 
@@ -193,7 +193,7 @@ on hierarchy, rhythm, and intent from a fresh-context agent.
 structured feedback with Hierarchy, Spacing Rhythm, and Contextual Intent sections; output
 is clearly labelled as independent review.
 
-- [ ] T034 [US7] Implement `ds-guard/commands/review.md` — `/dsguard:review <component> [--system <name>]` per `contracts/command-review.md`; spawns fresh-context agent with component source + guidance skill; structures output per contract format; does NOT access current session history
+- [X] T034 [US7] Implement `ds-guard/commands/review.md` — `/dsguard:review <component> [--system <name>]` per `contracts/command-review.md`; spawns fresh-context agent with component source + guidance skill; structures output per contract format; does NOT access current session history
 
 **Checkpoint**: US7 independently testable — reviewer produces independent qualitative feedback.
 
@@ -208,7 +208,7 @@ step and uses it without the engine present.
 present; load with `claude --plugin-dir ./acme-design-system`; run `/dsguard:check` →
 works without error.
 
-- [ ] T035 [US8] Add self-containment test to `tests/unit/generate.test.mjs` — verify generated plugin directory contains: `checker.mjs` (copy, not symlink), `checker-config.json`, `skills/<name>-design-system.md`, `hooks/ui-gate.md`, `.claude-plugin/plugin.json`; no paths referencing `ds-guard/` engine directory
+- [X] T035 [US8] Add self-containment test to `tests/unit/generate.test.mjs` — verify generated plugin directory contains: `checker.mjs` (copy, not symlink), `checker-config.json`, `skills/<name>-design-system.md`, `hooks/ui-gate.md`, `.claude-plugin/plugin.json`; no paths referencing `ds-guard/` engine directory
 
 **Checkpoint**: US8 independently testable — generated plugin works with engine absent.
 
@@ -223,8 +223,8 @@ defined is a hard failure (ERROR), not an advisory (warn).
 token format but absent from `approvedColors` → `ERROR` severity; with `tokenSetComplete:
 false` on same file → `warn` severity.
 
-- [ ] T036 [P] [US9] Create `tests/fixtures/known-bad/components/AuthoritativeBad.tsx` — component using a value that matches token naming convention but is not in the permitted set (e.g. `color.brand.coral` when only `color.brand.teal` is defined)
-- [ ] T037 [US9] Add authoritative-mode tests to `tests/unit/checker.test.mjs` — `tokenSetComplete: false` + undefined-but-plausible value → `warn`; `tokenSetComplete: true` + same value → `ERROR`; conforming value always passes in both modes (depends on T026, T036)
+- [X] T036 [P] [US9] Create `tests/fixtures/known-bad/components/AuthoritativeBad.tsx` — component using a value that matches token naming convention but is not in the permitted set (e.g. `color.brand.coral` when only `color.brand.teal` is defined)
+- [X] T037 [US9] Add authoritative-mode tests to `tests/unit/checker.test.mjs` — `tokenSetComplete: false` + undefined-but-plausible value → `warn`; `tokenSetComplete: true` + same value → `ERROR`; conforming value always passes in both modes (depends on T026, T036)
 
 **Checkpoint**: US9 independently testable — authoritative mode enforces hard failures correctly.
 
