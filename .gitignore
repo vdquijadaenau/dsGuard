@@ -24,8 +24,8 @@ Thumbs.db
 .idea/
 
 # Project-specific (carried over from prior .gitgnore)
-.claude/skills
-.specify
+.claude/
+.specify/
 specs/
 CLAUDE.md
 PRD-ds-guard-speckit.md
