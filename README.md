@@ -184,7 +184,7 @@ attributed to its system.
 ## Definition reference
 
 `design/rules.json` is validated at load time against
-[`schema/rules-schema.json`](schema/rules-schema.json) (`ajv`, draft-07). Required
+[`ds-guard/schema/rules-schema.json`](ds-guard/schema/rules-schema.json) (`ajv`, draft-07). Required
 fields: `name`, `schemaVersion`. All rule-class fields are optional; conflicting
 rules (e.g. `shadows.policy: "none"` with a non-empty `shadows.allowed`) are
 rejected with a specific diagnostic. Token values live in the DTCG files under
